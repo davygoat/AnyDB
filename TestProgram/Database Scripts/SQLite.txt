@@ -1,0 +1,80 @@
+﻿-- Copy and paste the following into sqlite3
+
+CREATE TABLE AnyDB_numbers
+(
+   number_text VARCHAR(80) NOT NULL PRIMARY KEY
+);
+INSERT INTO AnyDB_numbers VALUES ('One');
+INSERT INTO AnyDB_numbers VALUES ('Two');
+INSERT INTO AnyDB_numbers VALUES ('Three');
+INSERT INTO AnyDB_numbers VALUES ('Four');
+INSERT INTO AnyDB_numbers VALUES ('Five');
+INSERT INTO AnyDB_numbers VALUES ('OneOneOne');
+
+CREATE TABLE AnyDB_test
+(
+   column_one   INTEGER     NOT NULL,
+   column_two   VARCHAR(80) NOT NULL,
+   column_three DATETIME    NOT NULL,
+   column_four  REAL        NOT NULL,
+   PRIMARY KEY (column_one),
+   FOREIGN KEY (column_two) REFERENCES AnyDB_numbers,
+   UNIQUE      (column_two),
+   CHECK       (column_four > 0)
+);
+
+CREATE TABLE splite_procs
+(
+   name TEXT NOT NULL PRIMARY KEY,
+   sql  TEXT NOT NULL
+);
+
+INSERT INTO splite_procs VALUES ('AnyDB_testProcedure1', '
+   CREATE PROCEDURE AnyDB_testProcedure1 (@iKey INTEGER,
+                                          @fAdd REAL) AS
+   BEGIN
+      SELECT column_four + @fAdd
+      FROM   AnyDB_test
+      WHERE  column_one = @iKey;
+   END
+');
+
+INSERT INTO splite_procs VALUES ('AnyDB_testProcedure3', '
+   CREATE PROCEDURE AnyDB_testProcedure3 AS
+   BEGIN
+      SELECT *
+      FROM   AnyDB_test;
+   END
+');
+
+INSERT INTO splite_procs VALUES ('AnyDB_testProcedure4', '
+   CREATE PROCEDURE AnyDB_testProcedure4 AS
+   BEGIN
+      -- one
+      SELECT   *
+      FROM     AnyDB_test
+      ORDER BY column_one ASC;
+      -- two
+      SELECT   *
+      FROM     AnyDB_test
+      ORDER BY column_one DESC;
+   END
+');
+
+CREATE TRIGGER splite_procs_noinsert 
+BEFORE INSERT ON splite_procs
+BEGIN
+   SELECT RAISE (FAIL, 'table splite_procs may not be modified');
+END;
+
+CREATE TRIGGER splite_procs_noupdate
+BEFORE UPDATE ON splite_procs
+BEGIN
+   SELECT RAISE (FAIL, 'table splite_procs may not be modified');
+END;
+
+CREATE TRIGGER splite_procs_nodelete
+BEFORE DELETE ON splite_procs
+BEGIN
+   SELECT RAISE (FAIL, 'table splite_procs may not be modified');
+END;

@@ -1,0 +1,54 @@
+
+- Add Database.BeginTransaction() overloads to mirror Database constructor.
+
+- Possibly add Database shortcut methods to Transaction, e.g. tx.GetScalar<int>(). Or is that too much hassle for /// comments?
+
+- Database(DbConnectStringBuilder) constructor. AnyDB connection string builder with standard properties that "knows" 
+  what keywords to use for the target database?
+
+- Properly re-test all databases.
+
+- Testing with LOOPIT show SQLite regularly pauses.
+
+- MySQL JDBC needs allowMultiQueries=true for semicolon batches. Do other databases have similar query string options?
+
+- Informix seems to leak handles on Exception. But it keeps on going, well over 50000 handles... Will it eventually 
+  run out of handles or has it just got an insanely large pool?
+
+- Put pre-driver hacks, i.e. ODBC, DB2, Oracle, into drivers. More custom attributes for query string rewriting?
+
+- LIMIT ... OFFSET ...
+
+- Rdb testing. Create AnyDB tables and procedures on PSMET?
+
+- CUBRID: Java stored procedures.
+
+- Sybase ASE, SQL Anywhere.
+- Ingres.
+- Cassandra.
+- Derby, HSQLDB and other Java/JDBC using IKVM.NET? (Also for CUBRID?) http://www.ikvm.net/
+- H2 using h2sharp. Also try PostgreSQL ODBC driver.
+- http://www.martinbroadhurst.com/SQL-Engines.html
+
+- Check procedures with same name in different schemas. Make sure parameters don't get mixed up together.
+
+- Check Excel with $ and cell ranges in table name (must be in square brackets), at least to include in documentation.
+
+- All databases should also work with their ODBC drivers. Make sure they do.
+
+- Documentation: User Guide.
+
+- Do traditional parameter markers still work with the query rewriter? Check if out of sequence parameter markers work 
+  when parameters are named. They should. But naming parameters also creates problems with different RDMBS "parameter 
+  marker format string". In that case, I might have to rewrite the parameters.
+
+- INOUT parameters
+- Check NULL handling
+- BLOBS and CLOBS
+- XML data: can SQL Server XML column be read into an XmlDocument or an object?
+
+- Rewrite Gipoulateur to use AnyDB.
+
+- Charlie, who used to be a cleaner at the chocolate factory.
+- The Amalgamated Union of Gnomes, Undines and Goblins.
+- The Sylphs' and Salamanders' Igneous Miasmateers Association.

@@ -1,0 +1,6 @@
+**/bin/
+**/obj/
+DataShoveler/
+RdbTest/
+.vs
+*.VC.db
