@@ -30,6 +30,11 @@ namespace TestProgram
             }
         }
 
+        public interface IFred
+        {
+            int fred { get; set; }
+        }
+
         static void Main(string[] args)
         {
             Database.Trace = true;

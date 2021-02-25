@@ -66,6 +66,7 @@ namespace AnyDB
                 foreach (Type type in asm.GetTypes())
                 {
                     // we're only interested in classes derived from DriverBase
+		            if (!type.IsClass) continue;
                     if (type.BaseType != typeof(DriverBase) && type.BaseType.BaseType != typeof(DriverBase)) continue;
                     // look for [RegisterProvider] attributes
                     {
