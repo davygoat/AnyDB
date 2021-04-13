@@ -11,9 +11,11 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace AnyDB
@@ -39,10 +41,7 @@ namespace AnyDB
         /// </param>
 
         public Database(ConnectionStringSettings ConnectionStringObject)
-            : this(Enum.IsDefined(typeof(Providers), ConnectionStringObject.ProviderName)
-                     ? ProviderInvariantNames.Invariants[(Providers)Enum.Parse(typeof(Providers), ConnectionStringObject.ProviderName)]
-                     : ConnectionStringObject.ProviderName,
-                   ConnectionStringObject.ConnectionString)
+            : this(ConnectionStringObject.ProviderName, ConnectionStringObject.ConnectionString) // third choice constructor
         {
         }
 
@@ -64,7 +63,7 @@ namespace AnyDB
         /// </param>
 
         public Database(Providers Provider, string ConnectionString)
-            : this(ProviderInvariantNames.Invariants[Provider], ConnectionString)
+            : this(Provider.ToString(), ConnectionString) // third choice constructor
         {
         }
 
@@ -91,6 +90,16 @@ namespace AnyDB
         public Database(string ProviderInvariantName, string ConnectionString)
         {
             /*
+             * Accept non invariant (enum) name as an alternative to the actual (long) invariant name.
+             */
+
+            if (Enum.IsDefined(typeof(Providers), ProviderInvariantName))
+            {
+                var eprv = (Providers)Enum.Parse(typeof(Providers), ProviderInvariantName);
+                ProviderInvariantName = ProviderInvariantNames.Invariants[eprv];
+            }
+
+            /*
              * Remember these in case we need them again. We'll definitely need the connection string.
              */
 
@@ -116,10 +125,23 @@ namespace AnyDB
                 else
                     this.Factory = DbProviderFactories.GetFactory(this.ProviderInvariantName);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 if (ex.Message.Contains("Unable to find the requested .Net Framework Data Provider"))
-                    throw new ProviderNotFoundException(ConnectionString, this.ProviderInvariantName, ex);
+                {
+                    var bld = new StringBuilder();
+                    bld.Append("For information, these provider invariants are present in some form:");
+                    DataTable factories = DbProviderFactories.GetFactoryClasses();
+                    foreach(DataRow dr in factories.Rows)
+                    {
+                        var invariant = dr["InvariantName"].ToString();
+                        bld.Append($"\r\n- {invariant}");
+                    }
+                    var infoex = new Exception(bld.ToString());
+                    var windex = new Exception(ex.Message, infoex);
+                    var throwex = new ProviderNotFoundException(ConnectionString, this.ProviderInvariantName, windex);
+                    throw throwex;
+                }
                 else
                     throw new ConstructorException(ConnectionString, this.ProviderInvariantName, "Cannot load '" + this.ProviderInvariantName + "' factory class.", ex);
             }
@@ -289,6 +311,6 @@ namespace AnyDB
             return names;
         }
 
-        #endregion
+#endregion
     }
 }

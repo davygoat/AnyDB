@@ -49,7 +49,7 @@ namespace TestProgram
                 //new Run(Providers.ODBC,       @"Driver=SQL Server Native Client; Server=.\SQLEXPRESS; Database=AnyDB; Trusted_Connection=yes;"), // fuzzy driver name
 
                 //// OK to go
-                new Run(Providers.Access,     @"Driver=Microsoft Access Driver; DBQ=..\..\Database Scripts\Access.mdb"),                                 // fuzzy driver name
+                //new Run(Providers.Access,     @"Driver=Microsoft Access Driver; DBQ=..\..\Database Scripts\Access.mdb"),                                 // fuzzy driver name
                 //new Run(Providers.CUBRID,     @"server=localhost;database=AnyDB;user=test;password=lemming"),
                 //new Run(Providers.DB2,        @"Server=RDBMS:50000; Database=AnyDB; UID=test; PWD=lemming; Current Schema=david"),                   // fuzzy CurrentSchema
                 //new Run(Providers.Excel,      @"Driver=Microsoft Excel Driver; DBQ=..\..\Database Scripts\Excel.xls; Readonly=0"),                       // fuzzy driver name
@@ -59,7 +59,7 @@ namespace TestProgram
                 //new Run(Providers.MySQL,      @"Server=RDBMS; Database=AnyDB; UID=test; PWD=lemming"),
                 //new Run(Providers.Oracle,     @"Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=xe))); User Id=test; Password=lemming; CurrentSchema=david;"),                                // fake CurrentSchema option
                 //new Run(Providers.PostgreSQL, @"Server=RDBMS; Database=anydb; UID=test; PWD=lemming"),
-                //new Run(Providers.SQLite,     @"Data Source=..\..\Database Scripts\SQLite.db; Pooling=true; FailIfMissing=true"),
+                new Run(Providers.SQLite,     @"Data Source=..\..\Database Scripts\SQLite.db; Pooling=true; FailIfMissing=true"),
                 //new Run(Providers.SQLServer,  @"Server=localhost\SQLEXPRESS; UID=test; Password=lemming; Database=AnyDB;"),
                 //new Run(Providers.ODBC,       @"Driver=SQL Server Native Client; Server=.\SQLEXPRESS; Database=AnyDB; UID=test; PWD=lemming;"),         // fuzzy driver name
                 //new Run(Providers.OLEDB,      @"Provider=Microsoft.ACE.OLEDB.12.0; Data Source=..\..\Database Scripts\; Extended Properties='Text;HDR=YES;FMT=Delimited'"),
@@ -78,7 +78,7 @@ namespace TestProgram
                 Console.WriteLine("Provider ====================== : {0} {1}", run.Provider, new string('=', 60 - run.Provider.ToString().Length - 15));
                 try
                 {
-                    using (Database db = new Database(run.Provider, run.ConnectString))
+                    using (Database db = new Database(run.Provider.ToString(), run.ConnectString))
                     {
                         Console.ForegroundColor = ConsoleColor.DarkCyan;
                         Console.WriteLine("Invariant                   : {0}", db.ProviderInvariantName);
