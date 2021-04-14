@@ -62,16 +62,17 @@ namespace AnyDB.Drivers
                 {
                     con.ConnectionString = ConnectionString;
                     con.Open();
-                    GetDataTableUsingConnection(@"SELECT *
-                                                  FROM   splite_procs 
-                                                  LIMIT  0", 
-                                                  con);
-                    this.HasStoredProcedures = true;
+                    var dt = GetDataTableUsingConnection(@"SELECT *
+                                                           FROM   sqlite_master
+                                                           WHERE  type = 'table'
+                                                           AND    name = 'splite_procs'",
+                                                         con);
+                    this.HasStoredProcedures = dt.Rows.Count == 1;
                 }
             }
-            catch(Exception ex)
+            catch
             {
-                if (!ex.Message.Contains("no such table: splite_procs")) throw;
+                throw;
             }
         }
 
