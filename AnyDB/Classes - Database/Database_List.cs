@@ -132,8 +132,9 @@ namespace AnyDB
                 else
                 {
                     Type tt = IsNullableType(fi.FieldType) ? Nullable.GetUnderlyingType(fi.FieldType) : fi.FieldType;
-                    if (tt.IsEnum && ob != null && ob.ToString() != "") ob = Enum.Parse(tt, ob.ToString());
-                    else ob = Convert.ChangeType(ob, tt);
+                         if (tt.IsEnum && ob != null && ob.ToString() != "") ob = Enum.Parse(tt, ob.ToString());
+                    else if (tt == typeof(Guid))                             ob = new Guid(ob.ToString());
+                    else                                                     ob = Convert.ChangeType(ob, tt);
                 }
             }
             fi.SetValue(DestinationObject, ob);
@@ -156,8 +157,9 @@ namespace AnyDB
                 else
                 {
                     Type tt = IsNullableType(pi.PropertyType) ? Nullable.GetUnderlyingType(pi.PropertyType) : pi.PropertyType;
-                    if (tt.IsEnum && ob != null && ob.ToString() != "") ob = Enum.Parse(tt, ob.ToString());
-                    else ob = Convert.ChangeType(ob, tt);
+                         if (tt.IsEnum && ob != null && ob.ToString() != "") ob = Enum.Parse(tt, ob.ToString());
+                    else if (tt == typeof(Guid))                             ob = new Guid(ob.ToString());
+                    else                                                     ob = Convert.ChangeType(ob, tt);
                 }
             }
             pi.SetValue(DestinationObject, ob, null);
