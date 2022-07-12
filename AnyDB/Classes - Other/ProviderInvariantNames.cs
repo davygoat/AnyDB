@@ -43,7 +43,7 @@ namespace AnyDB
         {
             get
             {
-                return Invariants[Providers.DB2];
+                return Invariants[Providers.Access];
             }
         }
 
